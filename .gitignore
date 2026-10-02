@@ -1,5 +1,19 @@
+# env files (never commit real keys)
 .env
 .env.*
 !.env.example
-node_modules/
-dist/
+*.local
+
+# deps & build
+node_modules
+dist
+dist-ssr
+
+# logs
+*.log
+
+# editor
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store

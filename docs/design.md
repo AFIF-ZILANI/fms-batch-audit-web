@@ -201,7 +201,7 @@ Badges:
 | Server state | TanStack Query (cache, refetch after mutations) |
 | Forms | react-hook-form + zod |
 | Backend | Supabase: Postgres (schema in `schema.md`), Auth (email/password), PostgREST via `@supabase/supabase-js` |
-| Types | `supabase gen types typescript` → `src/lib/database.types.ts` |
+| Types | `npm run gen:types` (scripts/gen-db-types.mjs, same output shape as `supabase gen types`) → `src/lib/database.types.ts` |
 | CSV export | `papaparse` + `jszip` (client-side) |
 | Hosting | Vercel (static SPA, rewrite all routes to `index.html`) |
 
