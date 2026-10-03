@@ -32,7 +32,7 @@ function describe(c: Check): { text: string; to: string; button: string } {
     case "Batch has no chick purchase":
       return {
         text: "Chicks placed is 0, so mortality % and margin can't be calculated.",
-        to: `/entries/chick-purchases?batch=${c.ref_id}`,
+        to: `/chick-purchases/new?batch=${c.ref_id}`,
         button: "Add chick purchase",
       }
     case "Entry dated outside batch":
