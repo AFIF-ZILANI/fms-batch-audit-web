@@ -1,4 +1,4 @@
-import { BuildingIcon, ChevronRightIcon, PackageIcon, TagIcon, TruckIcon, UsersIcon } from "lucide-react"
+import { BuildingIcon, ChevronRightIcon, DownloadIcon, ListIcon, PackageIcon, ShieldAlertIcon, TagIcon, TruckIcon, UsersIcon } from "lucide-react"
 import type { ComponentType } from "react"
 import { Link } from "react-router"
 import { SectionTitle } from "@/components/common"
@@ -11,6 +11,14 @@ import { supabase } from "@/lib/supabase"
 type Item = { to: string; label: string; icon: ComponentType<{ className?: string }> }
 
 // M1 version of docs/page-layouts/22-more.md. Records, stock and safety links arrive with later milestones.
+const records: Item[] = [
+  { to: "/entries/usages", label: "All entries", icon: ListIcon },
+  { to: "/stock", label: "Stock", icon: PackageIcon },
+]
+const safety: Item[] = [
+  { to: "/checks", label: "Data checks", icon: ShieldAlertIcon },
+  { to: "/export", label: "Export data", icon: DownloadIcon },
+]
 const setup: Item[] = [
   { to: "/settings/sheds", label: "Sheds", icon: BuildingIcon },
   { to: "/settings/items", label: "Items", icon: TagIcon },
@@ -42,13 +50,8 @@ export function MorePage() {
       <PageHeader title="More" />
       <div className="space-y-6 p-4">
         <Group title="Setup" items={setup} />
-        <section className="space-y-2">
-          <SectionTitle>Coming next</SectionTitle>
-          <Card className="flex-row items-center gap-3 px-4 py-3 text-sm text-muted-foreground">
-            <PackageIcon className="size-5" />
-            Records, stock, data checks and export arrive in the next milestones.
-          </Card>
-        </section>
+        <Group title="Records" items={records} />
+        <Group title="Safety" items={safety} />
         <section className="space-y-2">
           <SectionTitle>Account</SectionTitle>
           <p className="text-sm">{session?.user.email}</p>
