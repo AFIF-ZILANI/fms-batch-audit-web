@@ -85,7 +85,7 @@ function MasterList({ config }: { config: MasterConfig }) {
         <div className="relative">
           <SearchIcon className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder="Search name or code"
+            placeholder={config.fields.some((f) => f.name === "code" && f.hidden) ? "Search name" : "Search name or code"}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="h-11 pl-9"
@@ -134,7 +134,9 @@ function MasterCard({ row, config, onClick }: { row: MasterRow; config: MasterCo
         </div>
         {line && <div className="truncate text-sm text-muted-foreground">{line}</div>}
       </div>
-      <span className="text-sm text-muted-foreground tabular-nums">{row.code}</span>
+      {!config.fields.some((f) => f.name === "code" && f.hidden) && (
+        <span className="text-sm text-muted-foreground tabular-nums">{row.code}</span>
+      )}
       <ChevronRightIcon className="size-4 text-muted-foreground" />
     </Card>
   )
@@ -252,6 +254,7 @@ function MasterForm({
           </SheetHeader>
           <form id="master-form" onSubmit={handleSubmit((v) => save.mutate(v))} className="space-y-4 px-4">
             {config.fields
+              .filter((f) => !f.hidden)
               .filter((f) => !f.showIf || f.showIf(values))
               .map((f) => {
                 const id = `m-${f.name}`
