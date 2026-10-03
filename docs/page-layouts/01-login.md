@@ -37,4 +37,4 @@
 ## Validation & states
 - Both fields required. Button shows a spinner and is disabled while signing in.
 - Error: "Email or password is wrong". Network error: "No connection. Try again."
-- No "forgot password" in v1. The password is reset from the Supabase dashboard.
+- "Forgot password?" emails a reset link (`resetPasswordForEmail`) to `/reset-password`, where the new password is set with `updateUser`. Add `<site>/reset-password` to Supabase → Auth → URL Configuration → Redirect URLs.
