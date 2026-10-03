@@ -162,7 +162,7 @@ export function MortalityFormPage() {
                 .filter((s) => s.is_active || String(s.id) === shed)
                 .map((s) => (
                   <SelectItem key={s.id} value={String(s.id)}>
-                    {s.code} · {s.name}
+                    {s.name}
                   </SelectItem>
                 ))}
             </SelectContent>

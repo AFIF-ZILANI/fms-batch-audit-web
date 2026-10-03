@@ -24,7 +24,7 @@ function PartyList({ party }: { party: Party }) {
     <Card key={b.id} className="cursor-pointer gap-1 p-4 active:bg-accent" onClick={() => navigate(`/money/${party}/${b.id}`)}>
       <div className="flex items-center justify-between">
         <span className="font-semibold">
-          {b.name} · <span className="font-normal text-muted-foreground">{b.code}</span>
+          {b.name}
         </span>
         <ChevronRightIcon className="size-4 text-muted-foreground" />
       </div>

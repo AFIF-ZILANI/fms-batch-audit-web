@@ -57,7 +57,7 @@ function MasterList({ config }: { config: MasterConfig }) {
 
   const { active, archived } = useMemo(() => {
     const q = search.trim().toLowerCase()
-    const match = (r: MasterRow) => !q || r.name.toLowerCase().includes(q) || r.code.toLowerCase().includes(q)
+    const match = (r: MasterRow) => !q || r.name.toLowerCase().includes(q)
     const rows = (data ?? []).filter(match)
     return { active: rows.filter((r) => r.is_active), archived: rows.filter((r) => !r.is_active) }
   }, [data, search])
@@ -85,7 +85,7 @@ function MasterList({ config }: { config: MasterConfig }) {
         <div className="relative">
           <SearchIcon className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder={config.fields.some((f) => f.name === "code" && f.hidden) ? "Search name" : "Search name or code"}
+            placeholder="Search name"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="h-11 pl-9"
@@ -134,9 +134,6 @@ function MasterCard({ row, config, onClick }: { row: MasterRow; config: MasterCo
         </div>
         {line && <div className="truncate text-sm text-muted-foreground">{line}</div>}
       </div>
-      {!config.fields.some((f) => f.name === "code" && f.hidden) && (
-        <span className="text-sm text-muted-foreground tabular-nums">{row.code}</span>
-      )}
       <ChevronRightIcon className="size-4 text-muted-foreground" />
     </Card>
   )

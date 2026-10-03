@@ -44,7 +44,7 @@ export type MasterConfig = {
 }
 
 const common: Field[] = [
-  { name: "code", label: "Code", type: "text", required: true },
+  { name: "code", label: "Code", type: "text", required: true, hidden: true },
   { name: "name", label: "Name", type: "text", required: true },
 ]
 const note: Field = { name: "note", label: "Note", type: "textarea" }
@@ -74,8 +74,7 @@ export const masterConfigs: Record<MasterTable, MasterConfig> = {
     codePrefix: () => "S",
     codePad: 1,
     fields: [
-      { ...common[0], hidden: true },
-      common[1],
+      ...common,
       {
         name: "type",
         label: "Type",
