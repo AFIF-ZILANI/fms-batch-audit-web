@@ -25,6 +25,8 @@ export type Field = {
   showIf?: (values: Record<string, string>) => boolean
   defaultValue?: string
   placeholder?: string
+  /** Not shown in the form; still saved (the code is auto-suggested). */
+  hidden?: boolean
 }
 
 export type MasterConfig = {
@@ -72,7 +74,8 @@ export const masterConfigs: Record<MasterTable, MasterConfig> = {
     codePrefix: () => "S",
     codePad: 1,
     fields: [
-      ...common,
+      { ...common[0], hidden: true },
+      common[1],
       {
         name: "type",
         label: "Type",
