@@ -102,7 +102,7 @@ export function BatchDetailPage() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onSelect={() => navigate(`/batches/${id}/edit`)}>Edit</DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => exportBatch(id, b.code)}>Export CSV</DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => exportBatch(id, b.code ?? `batch-${id}`)}>Export CSV</DropdownMenuItem>
               {isOpen ? (
                 <DropdownMenuItem onSelect={openCloseDialog}>Close batch</DropdownMenuItem>
               ) : (
