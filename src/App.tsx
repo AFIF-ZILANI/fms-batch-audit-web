@@ -20,6 +20,7 @@ function page<M>(load: () => Promise<M>, name: keyof M) {
 
 const router = createBrowserRouter([
   { path: "/login", element: <LoginPage /> },
+  { path: "/reset-password", lazy: page(() => import("@/pages/ResetPasswordPage"), "ResetPasswordPage") },
   {
     element: <RequireAuth />,
     children: [

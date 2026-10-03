@@ -18,8 +18,22 @@ export function LoginPage() {
   const [show, setShow] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [notice, setNotice] = useState<string | null>(null)
 
   if (session) return <Navigate to={from} replace />
+
+  async function onForgot() {
+    setError(null)
+    setNotice(null)
+    if (!email.trim()) return setError("Enter your email first.")
+    setBusy(true)
+    const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+      redirectTo: `${window.location.origin}/reset-password`,
+    })
+    setBusy(false)
+    if (error) setError(errorMessage(error))
+    else setNotice("Check your email for a reset link.")
+  }
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault()
@@ -74,8 +88,12 @@ export function LoginPage() {
           </div>
         </div>
         {error && <p className="text-sm text-red-600">{error}</p>}
+        {notice && <p className="text-sm text-green-700">{notice}</p>}
         <Button type="submit" className="h-11 w-full" disabled={busy}>
           {busy ? "Logging in…" : "Log in"}
+        </Button>
+        <Button type="button" variant="link" className="w-full" disabled={busy} onClick={onForgot}>
+          Forgot password?
         </Button>
       </form>
     </div>
