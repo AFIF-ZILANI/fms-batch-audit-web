@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { Trash2Icon } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useNavigate, useParams } from "react-router"
 import { toast } from "sonner"
@@ -42,18 +42,24 @@ export function BatchFormPage() {
   })
 
   const form = useForm<Values>({ defaultValues: { code: "", start_date: today(), close_date: "", note: "" } })
-  const { register, handleSubmit, reset, setValue, getValues, formState } = form
+  const { register, handleSubmit, reset, setValue, formState } = form
 
-  // Prefill: existing batch in edit mode, next B-### code in create mode.
+  // Prefill: existing batch in edit mode, next B-YYYY-MM-DD-NN code in create mode.
   useEffect(() => {
     if (isEdit && existing.data) {
       const b = existing.data
       reset({ code: b.code, start_date: b.start_date, close_date: b.close_date ?? "", note: b.note ?? "" })
     }
   }, [isEdit, existing.data, reset])
+  // Create mode: suggest B-YYYY-MM-DD-NN (NN = next free number for that start date) until the user types their own code.
+  const codeTyped = useRef(false)
+  const startDate = form.watch("start_date")
   useEffect(() => {
-    if (!isEdit) nextCode("batches", "B-", 3).then((c) => !getValues("code") && setValue("code", c)).catch(() => {})
-  }, [isEdit, getValues, setValue])
+    if (isEdit || !startDate || codeTyped.current) return
+    nextCode("batches", `B-${startDate}-`, 2)
+      .then((c) => !codeTyped.current && setValue("code", c))
+      .catch(() => {})
+  }, [isEdit, startDate, setValue])
 
   const save = useMutation({
     mutationFn: async (v: Values) => {
@@ -117,7 +123,7 @@ export function BatchFormPage() {
       <form id="batch-form" onSubmit={handleSubmit((v) => save.mutate(v))} className="space-y-4 p-4">
         <div className="space-y-2">
           <Label htmlFor="code">Batch code *</Label>
-          <Input id="code" className="h-11" {...register("code", { required: "Code is required" })} />
+          <Input id="code" className="h-11" {...register("code", { required: "Code is required", onChange: () => (codeTyped.current = true) })} />
           {err.code && <p className="text-sm text-red-600">{err.code.message}</p>}
         </div>
         <div className="space-y-2">
