@@ -10,7 +10,7 @@
 ├──────────────────────────────────────┤
 │ Batch code *                         │
 │ ┌────────────────────────────────┐   │
-│ │ B-003                          │   │  suggested: next B-### (editable)
+│ │ B-003                          │   │  suggested: B-YYYY-MM-DD-NN (editable)
 │ └────────────────────────────────┘   │
 │ Start date (placement) *             │
 │ ┌────────────────────────────────┐   │
@@ -38,7 +38,7 @@ After creating:
 ```
 
 ## Data
-Insert/update `batches (code, start_date, close_date, note)`. Next code: highest `B-###` + 1.
+Insert/update `batches (code, start_date, close_date, note)`. Next code: `B-<start date>-NN`, NN = highest for that date + 1 (01 if none).
 
 ## Validation
 - Code required and unique ("This code is already used").

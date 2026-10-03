@@ -28,7 +28,7 @@ Page references point to `page-layouts/`. Data references point to `schema.md`.
 
 | ID | User can… | Acceptance criteria | Priority | Page | Data |
 |---|---|---|---|---|---|
-| F-20 | Create a batch | Code suggested as next `B-###`; start date defaults to today; then offers "Add chick purchase now" | Must | 05 | `batches` |
+| F-20 | Create a batch | Code suggested as next `B-YYYY-MM-DD-NN`; start date defaults to today; then offers "Add chick purchase now" | Must | 05 | `batches` |
 | F-21 | Edit a batch | Code, start date, note editable | Must | 05 | `batches` |
 | F-22 | Close a batch | Sets close date (default today). If live balance ≠ 0, shows the gap and requires confirmation. | Must | 04 | `close_date` |
 | F-23 | Reopen a batch | Clears the close date | Must | 04 | — |
