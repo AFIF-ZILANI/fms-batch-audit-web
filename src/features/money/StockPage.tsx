@@ -23,7 +23,7 @@ export function StockPage() {
   const rows = (data ?? [])
     .filter((i) => i.is_active || i.balance_qty !== 0)
     .filter((i) => cat === "ALL" || i.category === cat)
-    .filter((i) => !search || `${i.name} ${i.code}`.toLowerCase().includes(search.toLowerCase()))
+    .filter((i) => !search || (i.name ?? "").toLowerCase().includes(search.toLowerCase()))
   const value = rows.reduce((s, i) => s + (i.stock_value ?? 0), 0)
   const groups = [...new Set(rows.map((i) => i.category))]
 

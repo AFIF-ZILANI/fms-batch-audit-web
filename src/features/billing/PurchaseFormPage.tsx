@@ -193,7 +193,7 @@ export function PurchaseFormPage() {
           control={control}
           name="supplier_id"
           label="Supplier"
-          options={activeOrSelected(suppliers.data, v.supplier_id).map((s) => ({ value: String(s.id), label: `${s.name} · ${s.code}` }))}
+          options={activeOrSelected(suppliers.data, v.supplier_id).map((s) => ({ value: String(s.id), label: s.name }))}
         />
         <PickField
           control={control}
