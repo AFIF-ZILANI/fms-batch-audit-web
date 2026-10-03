@@ -17,30 +17,29 @@ import { cn } from "@/lib/utils"
 
 type Tile = { label: string; icon: ComponentType<{ className?: string }>; to?: string }
 
-// Tiles without `to` are planned for later milestones (docs/prd.md §8) and render disabled.
 const groups: { title: string; tiles: Tile[] }[] = [
   {
     title: "Daily",
     tiles: [
-      { label: "Usage", icon: WheatIcon },
-      { label: "Mortality", icon: SkullIcon },
-      { label: "Weight", icon: ScaleIcon },
-      { label: "Return", icon: Undo2Icon },
+      { label: "Usage", icon: WheatIcon, to: "/usages/new?kind=ISSUE" },
+      { label: "Mortality", icon: SkullIcon, to: "/mortalities/new" },
+      { label: "Weight", icon: ScaleIcon, to: "/weights/new" },
+      { label: "Return", icon: Undo2Icon, to: "/usages/new?kind=RETURN" },
     ],
   },
   {
     title: "Sales & buying",
     tiles: [
-      { label: "Sale", icon: BirdIcon },
-      { label: "Purchase", icon: ShoppingCartIcon },
-      { label: "Chicks", icon: EggIcon },
+      { label: "Sale", icon: BirdIcon, to: "/sales/new" },
+      { label: "Purchase", icon: ShoppingCartIcon, to: "/purchases/new" },
+      { label: "Chicks", icon: EggIcon, to: "/chick-purchases/new" },
     ],
   },
   {
     title: "Money",
     tiles: [
-      { label: "Pay supplier", icon: ArrowUpRightIcon },
-      { label: "Receive", icon: ArrowDownLeftIcon },
+      { label: "Pay supplier", icon: ArrowUpRightIcon, to: "/payments/new?party=SUPPLIER" },
+      { label: "Receive", icon: ArrowDownLeftIcon, to: "/payments/new?party=BUYER" },
     ],
   },
   { title: "Setup", tiles: [{ label: "New batch", icon: LayersIcon, to: "/batches/new" }] },
@@ -54,7 +53,7 @@ export function AddSheet({ open, onOpenChange }: { open: boolean; onOpenChange: 
       <SheetContent side="bottom" className="mx-auto max-w-screen-sm rounded-t-2xl pb-[calc(env(safe-area-inset-bottom)+1rem)]">
         <SheetHeader>
           <SheetTitle>Add</SheetTitle>
-          <SheetDescription>Daily entries arrive in the next milestone.</SheetDescription>
+          <SheetDescription>What do you want to record?</SheetDescription>
         </SheetHeader>
         <div className="space-y-4 px-4">
           {groups.map((g) => (
