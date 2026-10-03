@@ -6,6 +6,7 @@ import { PageHeader } from "@/components/layout/PageHeader"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { useDataCheckCount, useMoneyStrip, useReminders, useTodayCounts } from "@/features/home/queries"
+import { lastExportDaysAgo } from "@/features/safety/lastExport"
 import { age, dateShortOrFull, grams, money, moneyShort, num, pct, today } from "@/lib/format"
 import { useBatchSummaries } from "@/lib/queries"
 
@@ -16,6 +17,7 @@ export function HomePage() {
   const problems = useDataCheckCount().data ?? 0
   const moneyStrip = useMoneyStrip().data
   const todayCounts = useTodayCounts().data
+  const exportAge = lastExportDaysAgo()
   const open = (data ?? []).filter((b) => b.status === "OPEN")
   const [todayLabel] = useState(() => {
     const d = new Date()
@@ -26,6 +28,11 @@ export function HomePage() {
     <>
       <PageHeader title="Home" actions={<span className="pr-2 text-sm text-muted-foreground">{todayLabel}</span>} />
       <div className="space-y-4 p-4">
+        {(exportAge === null || exportAge > 7) && (
+          <Link to="/export" className="block rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
+            {exportAge === null ? "No backup yet — export your data" : `Last export: ${exportAge} days ago — export again`}
+          </Link>
+        )}
         {reminders.length > 0 && (
           <Card className="gap-1 border-amber-200 bg-amber-50 p-3 text-amber-800">
             <div className="text-sm font-medium">To do</div>
