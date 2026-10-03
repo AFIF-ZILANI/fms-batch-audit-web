@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { MoreVerticalIcon } from "lucide-react"
 import { useState } from "react"
-import { useNavigate, useParams } from "react-router"
+import { Link, useNavigate, useParams } from "react-router"
 import { toast } from "sonner"
 import { ErrorNote, Kpi, KpiGrid, ListSkeleton, Row, SectionTitle, StatusBadge } from "@/components/common"
 import { PageHeader } from "@/components/layout/PageHeader"
@@ -21,13 +21,19 @@ import { Card } from "@/components/ui/card"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import {
+  ChicksSection,
+  MortalitySection,
+  QuickActions,
+  SalesSection,
+  UsageSection,
+  WeightSection,
+} from "@/features/batch-summary/Sections"
 import { errorMessage } from "@/lib/errors"
 import { age, date, dateShortOrFull, fixed2, grams, kg, money, moneyShort, num, pct, today } from "@/lib/format"
 import { keys, unwrap, useBatchSummary } from "@/lib/queries"
 import { supabase } from "@/lib/supabase"
 
-// M1 version of docs/page-layouts/04-batch-detail.md: KPIs, birds and cost.
-// Weight history, inputs, mortality, sales and quick-add buttons arrive with M2–M4.
 export function BatchDetailPage() {
   const id = Number(useParams().id)
   const navigate = useNavigate()
@@ -114,7 +120,10 @@ export function BatchDetailPage() {
         {b.chicks_placed === 0 && (
           <Alert className="border-amber-200 bg-amber-50 text-amber-800">
             <AlertDescription className="text-amber-800">
-              No chicks recorded for this batch yet. Chick purchases arrive in the next milestone.
+              No chicks recorded for this batch yet.{" "}
+              <Link to={`/chick-purchases/new?batch=${id}`} className="font-medium underline">
+                Add chick purchase
+              </Link>
             </AlertDescription>
           </Alert>
         )}
@@ -141,6 +150,8 @@ export function BatchDetailPage() {
             <Kpi value={moneyShort(b.gross_margin)} label="gross margin" tone={(b.gross_margin ?? 0) < 0 ? "danger" : undefined} />
           </KpiGrid>
         )}
+
+        {isOpen && <QuickActions id={id} />}
 
         <section className="space-y-2">
           <SectionTitle>Birds</SectionTitle>
@@ -192,6 +203,12 @@ export function BatchDetailPage() {
             {!isOpen && <Row label="Margin per chick" value={money(b.margin_per_chick, 2)} />}
           </Card>
         </section>
+
+        <WeightSection id={id} />
+        <UsageSection id={id} />
+        <MortalitySection id={id} />
+        <SalesSection id={id} />
+        <ChicksSection id={id} />
 
         {b.note && (
           <section className="space-y-2">

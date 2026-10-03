@@ -1,16 +1,21 @@
 import { useState } from "react"
-import { useNavigate } from "react-router"
+import { ChevronRightIcon } from "lucide-react"
+import { Link, useNavigate } from "react-router"
 import { EmptyState, ErrorNote, Kpi, KpiGrid, ListSkeleton, SectionTitle, StatusBadge } from "@/components/common"
 import { PageHeader } from "@/components/layout/PageHeader"
+import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { age, dateShortOrFull, grams, moneyShort, num, pct, today } from "@/lib/format"
+import { useDataCheckCount, useMoneyStrip, useReminders, useTodayCounts } from "@/features/home/queries"
+import { age, dateShortOrFull, grams, money, moneyShort, num, pct, today } from "@/lib/format"
 import { useBatchSummaries } from "@/lib/queries"
 
-// M1 version of docs/page-layouts/02-home.md: running batches only.
-// Reminders, data problems and the money strip arrive with milestone M4.
 export function HomePage() {
   const navigate = useNavigate()
   const { data, isLoading, error } = useBatchSummaries()
+  const reminders = useReminders().data ?? []
+  const problems = useDataCheckCount().data ?? 0
+  const moneyStrip = useMoneyStrip().data
+  const todayCounts = useTodayCounts().data
   const open = (data ?? []).filter((b) => b.status === "OPEN")
   const [todayLabel] = useState(() => {
     const d = new Date()
@@ -21,6 +26,30 @@ export function HomePage() {
     <>
       <PageHeader title="Home" actions={<span className="pr-2 text-sm text-muted-foreground">{todayLabel}</span>} />
       <div className="space-y-4 p-4">
+        {reminders.length > 0 && (
+          <Card className="gap-1 border-amber-200 bg-amber-50 p-3 text-amber-800">
+            <div className="text-sm font-medium">To do</div>
+            {reminders.map((r) => (
+              <div key={`${r.kind}-${r.batch_id}`} className="flex items-center justify-between gap-2 text-sm">
+                <span>
+                  <b>{r.batch_code}</b> {r.message}
+                </span>
+                <Button asChild size="sm" variant="outline" className="shrink-0 bg-background">
+                  <Link to={`${r.kind === "NO_WEIGHT" ? "/weights/new" : "/usages/new"}?batch=${r.batch_id}`}>Add</Link>
+                </Button>
+              </div>
+            ))}
+          </Card>
+        )}
+        {problems > 0 && (
+          <Link
+            to="/checks"
+            className="flex items-center justify-between rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-medium text-red-700"
+          >
+            {problems} data {problems === 1 ? "problem" : "problems"}
+            <ChevronRightIcon className="size-4" />
+          </Link>
+        )}
         <SectionTitle>Running batches</SectionTitle>
         {isLoading && <ListSkeleton rows={2} />}
         {error && <ErrorNote error={error} />}
@@ -47,8 +76,25 @@ export function HomePage() {
               <Kpi value={b.fcr_estimated == null ? "—" : `${b.fcr_estimated.toFixed(2)}e`} label="FCR (est.)" />
               <Kpi value={moneyShort(b.total_cost)} label="cost so far" />
             </KpiGrid>
+            <div className="text-sm text-muted-foreground">
+              Today: {todayCounts?.[b.id ?? -1] ?? 0} entries {(todayCounts?.[b.id ?? -1] ?? 0) > 0 && "✓"}
+            </div>
           </Card>
         ))}
+
+        {moneyStrip && (
+          <>
+            <SectionTitle>Money</SectionTitle>
+            <div className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border bg-border">
+              <Link to="/money?tab=suppliers">
+                <Kpi value={money(moneyStrip.weOwe)} label="We owe" />
+              </Link>
+              <Link to="/money?tab=buyers">
+                <Kpi value={money(moneyStrip.owedToUs)} label="Owed to us" />
+              </Link>
+            </div>
+          </>
+        )}
       </div>
     </>
   )
